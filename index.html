@@ -157,6 +157,104 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/15/auto-decltype/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="jianst">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog by jian">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/06/15/auto-decltype/" class="post-title-link" itemprop="url">auto/decltype</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-06-15 21:31:38 / 修改时间：21:32:56" itemprop="dateCreated datePublished" datetime="2024-06-15T21:31:38+08:00">2024-06-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CPP/" itemprop="url" rel="index"><span itemprop="name">CPP</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ol>
+<li>“自动”就是让计算机去做，而不是人去做，相对的是“手动”</li>
+<li>“类型”指的是操作目标，出来的是编译阶段的类型，而不是数值</li>
+<li>“推导”就是演算、运算，把隐含的值给算出来</li>
+</ol>
+<p> auto 让代码干净整齐了很多，不用去写那些复杂的模板参数了。但如果你把“自动类型推导”理解为仅仅是简化代码、少打几个字，那就实在是浪费了 C++ 标准委员会的一番苦心。auto 还避免了对类型的“硬编码”</p>
+<p>使用auto需要注意的地方：</p>
+<ul>
+<li>auto 的“自动推导”能力只能用在“初始化”的场合</li>
+<li>如果不是初始化的形式，只是“纯”变量声明，那就无法使用 auto<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> x = <span class="number">0L</span>; <span class="comment">// 自动推导为long</span></span><br><span class="line"><span class="keyword">auto</span> y = &amp;x; <span class="comment">// 自动推导为long*</span></span><br><span class="line"><span class="keyword">auto</span> z &#123;&amp;x&#125;; <span class="comment">// 自动推导为long*</span></span><br><span class="line"><span class="keyword">auto</span> err; <span class="comment">// 错误，没有赋值表达式，不知道是什么类型</span></span><br></pre></td></tr></table></figure></li>
+<li>auto 总是推导出“值类型”，绝不会是“引用”</li>
+<li>auto 可以附加上 const、volatile、<code>*</code>、&amp; 这样的类型修饰符，得到新的类型。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> x = <span class="number">10L</span>;        <span class="comment">// auto推导为long，x是long</span></span><br><span class="line"><span class="keyword">auto</span>&amp; x1 = x;        <span class="comment">// auto推导为long，x1是long&amp;</span></span><br><span class="line"><span class="keyword">auto</span>* x2 = &amp;x;       <span class="comment">// auto推导为long，x2是long*</span></span><br><span class="line"><span class="type">const</span> <span class="keyword">auto</span>&amp; x3 = x;  <span class="comment">// auto推导为long，x3是const long&amp;</span></span><br><span class="line"><span class="keyword">auto</span> x4 = &amp;x3;       <span class="comment">// auto推导为const long*</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="decltype"><a href="#decltype" class="headerlink" title="decltype"></a>decltype</h2><p>auto 只能用于“初始化”，而这种“向编译器索取类型”的能力非常有价值，仅仅用来初始化有点屈才了。因此还有另外一个自动类型推导的关键字：<code>decltype</code>。</p>
+<p>decltype 的形式很像函数，后面的圆括号里就是可用于计算类型的表达式（和 sizeof 有点类似）。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> x = <span class="number">0</span>;            <span class="comment">// 整型变量</span></span><br><span class="line"><span class="keyword">decltype</span>(x) x1;       <span class="comment">// 推导为int，x1是int</span></span><br><span class="line"><span class="keyword">decltype</span>(x)&amp; x2 = x;  <span class="comment">// 推导为int，x2是int&amp;，引用必须赋值</span></span><br><span class="line"><span class="keyword">decltype</span>(x)* x3 = <span class="keyword">new</span> <span class="keyword">decltype</span>(x)(<span class="number">3</span>);  <span class="comment">// 推导为int，x3是int*</span></span><br><span class="line"><span class="keyword">decltype</span>(&amp;x) x4;                       <span class="comment">// 推导为int*，x4是int*</span></span><br><span class="line"><span class="keyword">decltype</span>(&amp;x)* x5;                      <span class="comment">// 推导为int*，x5是int**</span></span><br><span class="line"><span class="keyword">decltype</span>(x2) x6 = x2;</span><br></pre></td></tr></table></figure>
+
+<p>decltype 不仅能够推导出值类型，还能够推导出引用类型，也就是表达式的“原始类型”。所以，你完全可以把 decltype 看成是一个<strong>真正的类型名</strong>，用在变量声明、函数参数 &#x2F; 返回值、模板参数等任何类型能出现的地方，只不过这个类型是在编译阶段通过表达式“计算”得到的。</p>
+<p>缺点：实际上，它也有个缺点，就是写起来略麻烦，特别在用于初始化的时候，表达式要重复两次（左边的类型计算，右边的初始化），把简化代码的优势完全给抵消了。<br>所以在C++14中增加了<code>decltype(auto)</code>.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// decltype(auto)</span></span><br><span class="line"><span class="type">int</span> x = <span class="number">0</span>;                <span class="comment">// 整型变量</span></span><br><span class="line"><span class="keyword">decltype</span>(<span class="keyword">auto</span>) x1 = (x);  <span class="comment">// 推导为int&amp;，因为(expr)是引用类型</span></span><br><span class="line"><span class="keyword">decltype</span>(<span class="keyword">auto</span>) x2 = &amp;x;   <span class="comment">// 推导为int*</span></span><br><span class="line"><span class="keyword">decltype</span>(<span class="keyword">auto</span>) x3 = x1;  <span class="comment">// 推导为int&amp;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><p>auto的最佳实践，<strong>range-based-for</strong>，适合在容器遍历时使用，不需要关心容器的元素类型、迭代器返回值和首末位置，为了运行效率，一般使用引用类型：<code>const auto&amp;</code>或者<code>auto&amp;</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; res = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span>&amp; p : res) &#123;</span><br><span class="line">	std::cout &lt;&lt; <span class="string">&quot;p: &quot;</span> &lt;&lt; p &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在C++14中，还可以推导函数返回值：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">get_a_set</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::set&lt;<span class="type">int</span>&gt; s = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</span><br><span class="line">    <span class="keyword">return</span> s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>decltype的最佳实践：<br>它是auto的高级形式，更侧重于编译阶段的类型计算，常用于泛型编程。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// UNIX信号函数的原型，看着就让人晕，你能手写出函数指针吗？</span></span><br><span class="line"><span class="built_in">void</span> (*<span class="built_in">signal</span>(<span class="type">int</span> signo, <span class="built_in">void</span> (*func)(<span class="type">int</span>)))(<span class="type">int</span>)</span><br><span class="line"><span class="comment">// 使用decltype可以轻松得到函数指针类型</span></span><br><span class="line"><span class="keyword">using</span> <span class="type">sig_func_ptr_t</span> = <span class="keyword">decltype</span>(&amp;signal) ;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/02/ROS%E5%8A%9F%E8%83%BD%E5%8C%85%E4%B9%8B%E9%97%B4%E5%BC%95%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -407,14 +505,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
