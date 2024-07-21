@@ -606,10 +606,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2024-06-02 02:56:24 / 修改时间：13:45:24" itemprop="dateCreated datePublished" datetime="2024-06-02T02:56:24+08:00">2024-06-02</time>
+              <time title="创建时间：2024-06-02 02:56:24" itemprop="dateCreated datePublished" datetime="2024-06-02T02:56:24+08:00">2024-06-02</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-07-21 22:43:13" itemprop="dateModified" datetime="2024-07-21T22:43:13+08:00">2024-07-21</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -666,12 +672,12 @@
 <p>#include “package_common&#x2F;math_lib&#x2F;AddFunction.h”</p>
 </blockquote>
 </li>
-<li><p><strong>add_library</strong> 编译库，STATIC生成静态so文件，cpp文件的路径相对于当前功能包</p>
+<li><p><strong>add_library</strong> 编译库，<code>STATIC</code>生成静态文件，如果使用<code>PUBLIC</code>则生成动态库文件。cpp文件的路径相对于当前功能包</p>
 </li>
 <li><p><strong>target_link_libraries</strong> 链接库， 将编译出来的库文件和ROS链接</p>
 </li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">include_directories(</span><br><span class="line">  $&#123;catkin_INCLUDE_DIRS&#125;</span><br><span class="line">  $&#123;CMAKE_SOURCE_DIR&#125; </span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">add_library(package_common_math STATIC # 静态so文件</span><br><span class="line">  math_lib/AddFunction.cpp</span><br><span class="line">)</span><br><span class="line">target_link_libraries(package_common_math</span><br><span class="line">  $&#123;catkin_INCLUDE_DIRS&#125;</span><br><span class="line">)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">include_directories(</span><br><span class="line">  $&#123;catkin_INCLUDE_DIRS&#125;</span><br><span class="line">  $&#123;CMAKE_SOURCE_DIR&#125; </span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">add_library(package_common_math STATIC # 静态文件</span><br><span class="line">  math_lib/AddFunction.cpp</span><br><span class="line">)</span><br><span class="line">target_link_libraries(package_common_math</span><br><span class="line">  $&#123;catkin_INCLUDE_DIRS&#125;</span><br><span class="line">)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h2 id="3-a包"><a href="#3-a包" class="headerlink" title="3. a包"></a>3. a包</h2><p>上面创建了一个公共函数的common包，下面就创建一个a包去链接common包中生成好的库。<br>按照惯例，也不使用ROS生成的src和include文件夹，新创建一个main文件夹，在里面创建一个main.cpp</p>
 <figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">package_a</span><br><span class="line">   │   ├── CMakeLists.txt</span><br><span class="line">   │   ├── main</span><br><span class="line">   │   │   └── main.cpp</span><br><span class="line">   │   └── package.xml</span><br></pre></td></tr></table></figure>
